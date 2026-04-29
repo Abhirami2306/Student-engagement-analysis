@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login - EduPulse Vortex</title>
+    <link rel="stylesheet" href="/css/style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    />
+  </head>
+  <body class="login-page">
+    <div class="login-page-container">
+      <div class="login-left-panel">
+        <div class="top-section">
+          <div class="brand-section">
+            <span class="brand-icon"
+              ><i class="fa-solid fa-graduation-cap"></i
+            ></span>
+            <span class="brand-name">EduPulse Vortex</span>
+          </div>
+          <h3 class="tagline">
+            Transform your learning experience with AI-powered education
+          </h3>
+        </div>
+
+        <div class="illustration-card">
+          <img
+            src="https://static.vecteezy.com/system/resources/thumbnails/047/385/342/small_2x/online-education-study-university-animation-free-video.jpg"
+            alt="Students learning with AI"
+          />
+        </div>
+
+        <div class="feature-cards-container">
+          <div class="feature-card">
+            <div class="icon"><i class="fa-solid fa-lightbulb"></i></div>
+            <h4>Smart Learning</h4>
+            <p>Personalized curriculum adapted to your pace.</p>
+          </div>
+          <div class="feature-card">
+            <div class="icon"><i class="fa-solid fa-chart-line"></i></div>
+            <h4>Track Progress</h4>
+            <p>Real-time analytics and insights.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="login-right-panel">
+        <div class="login-form-wrapper">
+          <div class="tab-buttons">
+            <button class="tab-button active" data-role="student">
+              Student Login
+            </button>
+            <button class="tab-button" data-role="teacher">
+              Teacher Login
+            </button>
+          </div>
+
+          <div class="portal-header">
+            <div class="icon"><i class="fa-solid fa-user-graduate"></i></div>
+            <h2>Student Portal</h2>
+            <p>Access your courses and assignments</p>
+          </div>
+
+          <form id="login-form">
+            <div class="input-group">
+              <i class="fa-solid fa-envelope input-icon"></i>
+              <input
+                type="email"
+                id="email"
+                placeholder="Email Address"
+                required
+              />
+            </div>
+            <div class="input-group">
+              <i class="fa-solid fa-lock input-icon"></i>
+              <input
+                type="password"
+                id="password"
+                placeholder="Enter your password"
+                required
+              />
+            </div>
+            <div class="checkbox-group">
+              <label class="checkbox-label">
+                <input type="checkbox" /> Remember me
+              </label>
+              <a href="#" class="forgot-password">Forgot password?</a>
+            </div>
+            <button type="submit" class="btn-sign-in">Sign In</button>
+          </form>
+
+          <p class="register-link">
+            Don't have an account? <a href="#">Register here</a>
+          </p>
+
+          <p class="terms-privacy">
+            By signing in, you agree to our <a href="#">Terms of Service</a> and
+            <a href="#">Privacy Policy</a>
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="help-button"><i class="fa-solid fa-question"></i></div>
+
+    <script>
+      // --- FIX: Use the correct email addresses that match main.py ---
+      const studentEmailField = "student@example.com";
+      const teacherEmailField = "teacher@example.com";
+      const commonPasswordField = "password123";
+
+      // The rest of the script is the same and already correct
+      const emailInput = document.getElementById("email");
+      const passwordInput = document.getElementById("password");
+      const portalHeaderIcon = document.querySelector(".portal-header .icon i");
+      const portalHeaderTitle = document.querySelector(".portal-header h2");
+      const portalHeaderText = document.querySelector(".portal-header p");
+      const tabButtons = document.querySelectorAll(".tab-button");
+      let currentRole = "student";
+
+      const setStudentView = () => {
+        emailInput.value = studentEmailField;
+        passwordInput.value = commonPasswordField;
+        portalHeaderIcon.className = "fa-solid fa-user-graduate";
+        portalHeaderTitle.textContent = "Student Portal";
+        portalHeaderText.textContent = "Access your courses and assignments";
+      };
+      setStudentView(); // Set on page load
+
+      tabButtons.forEach((button) => {
+        button.addEventListener("click", () => {
+          tabButtons.forEach((btn) => btn.classList.remove("active"));
+          button.classList.add("active");
+          currentRole = button.dataset.role;
+
+          if (currentRole === "student") {
+            setStudentView();
+          } else {
+            emailInput.value = teacherEmailField;
+            passwordInput.value = commonPasswordField;
+            portalHeaderIcon.className = "fa-solid fa-chalkboard-user";
+            portalHeaderTitle.textContent = "Teacher Portal";
+            portalHeaderText.textContent = "Manage classes and insights";
+          }
+        });
+      });
+
+      document
+        .getElementById("login-form")
+        .addEventListener("submit", async (e) => {
+          e.preventDefault();
+          const email = emailInput.value;
+          const password = passwordInput.value;
+
+          try {
+            const response = await fetch("/login", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ email, password }),
+            });
+            const data = await response.json();
+            if (data.status === "success") {
+              localStorage.setItem("userName", data.name);
+              window.location.href = `/${currentRole}-dashboard`;
+            } else {
+              alert("Login Failed: Invalid credentials.");
+            }
+          } catch (error) {
+            console.error("Login Error:", error);
+            alert("An error occurred. Please try again later.");
+          }
+        });
+    </script>
+  </body>
+</html>

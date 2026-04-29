@@ -1,0 +1,757 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Student Report - EduPulse Vortex</title>
+
+    <style>
+      :root {
+        --bg: #0f1724;
+        --card: #0b1220;
+        --text: #e6eef8;
+        --muted: #9aa6bd;
+        --accent: #6b46c1;
+        --green: #2dd4bf;
+        --yellow: #f59e0b;
+        --red: #ef4444;
+        --border: rgba(255, 255, 255, 0.06);
+        --sidebar-w: 260px;
+        --gap: 1rem;
+        font-family:
+          Inter,
+          ui-sans-serif,
+          system-ui,
+          -apple-system,
+          "Segoe UI",
+          Roboto,
+          "Helvetica Neue",
+          Arial;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        height: 100%;
+        margin: 0;
+        background: linear-gradient(180deg, #071028 0%, #071523 100%);
+        color: var(--text);
+      }
+
+      .app-layout {
+        display: flex;
+        min-height: 100vh;
+      }
+
+      .sidebar {
+        width: var(--sidebar-w);
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        padding: 1.25rem;
+        border-right: 1px solid var(--border);
+        background: linear-gradient(
+          180deg,
+          rgba(255, 255, 255, 0.02),
+          transparent
+        );
+      }
+
+      .logo {
+        color: var(--text);
+        font-weight: 700;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+      }
+
+      .nav-menu {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        margin-top: 1rem;
+      }
+
+      .nav-menu a {
+        color: var(--muted);
+        text-decoration: none;
+        padding: 0.5rem;
+        border-radius: 8px;
+      }
+
+      .nav-menu a.active,
+      .nav-menu a:focus {
+        background: rgba(107, 70, 193, 0.12);
+        color: var(--text);
+        outline: none;
+      }
+
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        border-radius: 8px;
+        padding: 0.65rem 0.9rem;
+        border: 0;
+        cursor: pointer;
+        font-size: 0.95rem;
+      }
+
+      .btn-outline {
+        background: transparent;
+        border: 1px solid var(--border);
+        color: var(--text);
+      }
+
+      .btn-primary {
+        background: linear-gradient(90deg, var(--accent), #9f7aea);
+        color: white;
+      }
+
+      .main-content-wrapper {
+        flex: 1;
+        padding: 1.5rem 2rem;
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+      }
+
+      .report-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 1rem;
+        flex-wrap: wrap;
+      }
+
+      .stat-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 1rem;
+      }
+
+      .card {
+        background: linear-gradient(
+          180deg,
+          rgba(255, 255, 255, 0.02),
+          rgba(255, 255, 255, 0.01)
+        );
+        padding: 1rem;
+        border-radius: 12px;
+        border: 1px solid var(--border);
+      }
+
+      .stat-card .value {
+        font-size: 1.25rem;
+        font-weight: 700;
+      }
+
+      .feedback-summary-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1rem;
+      }
+
+      .feedback-card {
+        text-align: center;
+        padding: 1rem;
+        border-radius: 8px;
+      }
+
+      .count {
+        font-weight: 700;
+        font-size: 1.5rem;
+      }
+
+      .text-green {
+        color: var(--green);
+      }
+
+      .text-yellow {
+        color: var(--yellow);
+      }
+
+      .text-red {
+        color: var(--red);
+      }
+
+      .chart-wrap {
+        position: relative;
+        height: 340px;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+
+      th,
+      td {
+        text-align: left;
+        padding: 0.75rem;
+        border-bottom: 1px solid var(--border);
+      }
+
+      .xai-image {
+        max-width: 100%;
+        border-radius: 12px;
+        display: none;
+        border: 1px solid var(--border);
+      }
+
+      .muted {
+        color: var(--muted);
+      }
+
+      /* Responsive Charts Layout */
+      .charts-grid {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: 1.5rem;
+        margin-bottom: 1rem;
+      }
+
+      @media (max-width: 1100px) {
+        .charts-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      @media (max-width: 900px) {
+        .sidebar {
+          display: none;
+        }
+
+        .stat-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+
+        .feedback-summary-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      @media print {
+        .sidebar,
+        .btn,
+        #logout-btn {
+          display: none !important;
+        }
+
+        body {
+          background: white;
+          color: black;
+        }
+
+        .card {
+          border: 0;
+          background: transparent;
+        }
+      }
+    </style>
+
+    <script
+      src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"
+      defer
+    ></script>
+  </head>
+
+  <body>
+    <div class="app-layout">
+      <aside class="sidebar" aria-label="Main navigation">
+        <a href="/teacher-dashboard" class="logo">
+          <span>⚡</span>
+          <span>EduPulse Vortex</span>
+        </a>
+
+        <nav class="nav-menu">
+          <a href="/teacher-dashboard">Dashboard</a>
+          <a href="#" class="active">Student Report</a>
+        </nav>
+
+        <div
+          style="
+            margin-top: auto;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border);
+          "
+        >
+          <div
+            style="
+              display: flex;
+              align-items: center;
+              gap: 1rem;
+              margin-bottom: 1rem;
+            "
+          >
+            <img
+              src="https://i.pravatar.cc/40?u=teacher"
+              alt="Teacher avatar"
+              style="width: 40px; height: 40px; border-radius: 50%"
+            />
+            <div>
+              <div id="user-name" style="font-weight: 600">Teacher</div>
+              <div style="font-size: 0.9rem; color: var(--muted)">Teacher</div>
+            </div>
+          </div>
+          <button id="logout-btn" class="btn btn-outline" style="width: 100%">
+            Logout
+          </button>
+        </div>
+      </aside>
+
+      <main class="main-content-wrapper">
+        <div class="report-header">
+          <div>
+            <h1 id="report-title">Student Report</h1>
+            <p id="report-sub" class="muted" style="margin: 0">
+              Individual engagement and performance analysis
+            </p>
+          </div>
+
+          <div
+            style="
+              display: flex;
+              align-items: center;
+              gap: 0.5rem;
+              flex-wrap: wrap;
+            "
+          >
+            <a href="/teacher-dashboard" class="btn btn-outline">← Back</a>
+            <button id="download-btn" class="btn btn-primary">
+              ⬇️ Download PDF
+            </button>
+            <button id="download-txt-btn" class="btn btn-outline">
+              Download TXT
+            </button>
+            <button id="export-png" class="btn btn-outline">Export PNG</button>
+            <button id="export-csv" class="btn btn-outline">Export CSV</button>
+          </div>
+        </div>
+
+        <div class="stat-grid">
+          <div class="card stat-card">
+            <h4>Current Status</h4>
+            <div id="current-status" class="value">--</div>
+            <p class="muted">Real-time status</p>
+          </div>
+
+          <div class="card stat-card">
+            <h4>Current Engagement</h4>
+            <div id="current-engagement" class="value">0%</div>
+            <p class="muted">This session</p>
+          </div>
+
+          <div class="card stat-card">
+            <h4>Average Engagement</h4>
+            <div id="average-engagement" class="value">0%</div>
+            <p class="muted">Overall average</p>
+          </div>
+
+          <div class="card stat-card">
+            <h4>Total Feedback</h4>
+            <div id="total-feedback" class="value">0</div>
+            <p class="muted">Responses submitted</p>
+          </div>
+        </div>
+
+        <div class="charts-grid">
+          <div class="card" style="margin-bottom: 0">
+            <h3 style="margin-top: 0">Engagement Trend</h3>
+            <div class="chart-wrap">
+              <canvas id="engagementChart"></canvas>
+            </div>
+          </div>
+
+          <div class="card" style="margin-bottom: 0">
+            <h3 style="margin-top: 0">Emotion Distribution</h3>
+            <div class="chart-wrap">
+              <canvas id="emotionPieChart"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <div class="feedback-summary-grid">
+          <div class="card feedback-card">
+            <div class="count text-green" id="clear-count">0</div>
+            <p>Clear / Positive</p>
+          </div>
+
+          <div class="card feedback-card">
+            <div class="count text-yellow" id="confusing-count">0</div>
+            <p>Confusing / Neutral</p>
+          </div>
+
+          <div class="card feedback-card">
+            <div class="count text-red" id="boring-count">0</div>
+            <p>Boring / Negative</p>
+          </div>
+        </div>
+
+        <div class="card">
+          <div
+            style="
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+              margin-bottom: 0.5rem;
+            "
+          >
+            <h3 style="margin-top: 0; margin-bottom: 0">
+              Explainable AI (Grad-CAM)
+            </h3>
+            <button id="load-xai-btn" class="btn btn-primary">
+              Refresh Heatmap
+            </button>
+          </div>
+          <p class="muted">
+            Visual explanation of the model prediction. Red/yellow zones
+            indicate where the AI is focusing to determine the emotion.
+          </p>
+
+          <div
+            style="text-align: center; margin-top: 1.5rem; min-height: 100px"
+          >
+            <img
+              id="xai-image"
+              class="xai-image"
+              alt="XAI heatmap"
+              style="
+                max-width: 100%;
+                margin: 0 auto;
+                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+              "
+            />
+            <p id="xai-status" class="muted">
+              Click "Refresh Heatmap" to generate.
+            </p>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3 style="margin-top: 0">Recent Engagement Records</h3>
+          <div style="overflow-x: auto">
+            <table>
+              <thead>
+                <tr>
+                  <th>Time</th>
+                  <th>Emotion</th>
+                  <th>Engagement</th>
+                  <th>Reason</th>
+                </tr>
+              </thead>
+              <tbody id="engagement-table-body"></tbody>
+            </table>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <script>
+      let engagementChart = null;
+      let emotionPieChart = null;
+
+      function getStudentId() {
+        const params = new URLSearchParams(window.location.search);
+        return params.get("student_id") || "student123";
+      }
+
+      function getStatusLabel(score) {
+        if (score >= 0.7) return "Attentive";
+        if (score >= 0.4) return "Moderately Attentive";
+        if (score >= 0.2) return "Distracted";
+        return "Highly Distracted";
+      }
+
+      function updateTable(history) {
+        const tbody = document.getElementById("engagement-table-body");
+        tbody.innerHTML = "";
+
+        const recent = [...history].slice(-10).reverse();
+
+        if (!recent.length) {
+          tbody.innerHTML = `
+            <tr>
+              <td colspan="4" class="muted">No engagement history available yet.</td>
+            </tr>
+          `;
+          return;
+        }
+
+        recent.forEach((item) => {
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+            <td>${item.timestamp || "--"}</td>
+            <td>${item.emotion || "--"}</td>
+            <td>${Math.round((item.engagement || 0) * 100)}%</td>
+            <td>${item.reason || "--"}</td>
+          `;
+          tbody.appendChild(tr);
+        });
+      }
+
+      function updateFeedbackSummary(feedback) {
+        const clear = feedback.filter((f) =>
+          (f || "").toLowerCase().includes("clear"),
+        ).length;
+        const confusing = feedback.filter((f) =>
+          (f || "").toLowerCase().includes("confusing"),
+        ).length;
+        const boring = feedback.filter((f) =>
+          (f || "").toLowerCase().includes("boring"),
+        ).length;
+
+        document.getElementById("clear-count").textContent = clear;
+        document.getElementById("confusing-count").textContent = confusing;
+        document.getElementById("boring-count").textContent = boring;
+      }
+
+      function updateChart(history) {
+        const labels = history.map((item) => item.timestamp || "");
+        const values = history.map((item) =>
+          Math.round((item.engagement || 0) * 100),
+        );
+
+        const ctx = document.getElementById("engagementChart");
+
+        if (engagementChart) {
+          engagementChart.destroy();
+        }
+
+        engagementChart = new Chart(ctx, {
+          type: "line",
+          data: {
+            labels,
+            datasets: [
+              {
+                label: "Engagement %",
+                data: values,
+                tension: 0.35,
+                borderWidth: 2,
+                borderColor: "#3b82f6",
+                fill: false,
+              },
+            ],
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                labels: {
+                  color: "#e6eef8",
+                },
+              },
+            },
+            scales: {
+              x: {
+                ticks: { color: "#9aa6bd" },
+                grid: { color: "rgba(255,255,255,0.06)" },
+              },
+              y: {
+                min: 0,
+                max: 100,
+                ticks: { color: "#9aa6bd" },
+                grid: { color: "rgba(255,255,255,0.06)" },
+              },
+            },
+          },
+        });
+      }
+
+      function updatePieChart(history) {
+        const ctx = document.getElementById("emotionPieChart");
+        const emotionCounts = {};
+
+        // Count occurrences of each emotion
+        history.forEach((item) => {
+          const emo = item.emotion || "Unknown";
+          emotionCounts[emo] = (emotionCounts[emo] || 0) + 1;
+        });
+
+        if (emotionPieChart) {
+          emotionPieChart.destroy();
+        }
+
+        emotionPieChart = new Chart(ctx, {
+          type: "doughnut",
+          data: {
+            labels: Object.keys(emotionCounts),
+            datasets: [
+              {
+                data: Object.values(emotionCounts),
+                backgroundColor: [
+                  "#6b46c1",
+                  "#2dd4bf",
+                  "#f59e0b",
+                  "#ef4444",
+                  "#3b82f6",
+                  "#10b981",
+                  "#8b5cf6",
+                  "#f43f5e",
+                ],
+                borderWidth: 0,
+                hoverOffset: 4,
+              },
+            ],
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                position: "bottom",
+                labels: { color: "#e6eef8", padding: 20 },
+              },
+            },
+            cutout: "70%", // Makes it a sleek doughnut ring
+          },
+        });
+      }
+
+      async function loadReportData() {
+        const studentId = getStudentId();
+
+        try {
+          const res = await fetch(`/data/engagement/${studentId}`);
+          const data = await res.json();
+
+          if (!res.ok) {
+            throw new Error(data.message || "Failed to load report");
+          }
+
+          const history = data.engagement_history || [];
+
+          // These are already percentages from the backend (e.g., 85.00)
+          const latestAttention = Number(data.latest_attention || 0);
+          const averageEngagement = Number(data.average_engagement || 0);
+          const feedback = data.feedback || [];
+
+          document.getElementById("report-title").textContent =
+            `Student Report - ${studentId}`;
+
+          document.getElementById("current-status").textContent =
+            getStatusLabel(latestAttention / 100);
+
+          document.getElementById("current-engagement").textContent =
+            `${Math.round(latestAttention)}%`;
+
+          document.getElementById("average-engagement").textContent =
+            `${Math.round(averageEngagement)}%`;
+
+          document.getElementById("total-feedback").textContent =
+            feedback.length;
+
+          updateTable(history);
+          updateFeedbackSummary(feedback);
+          updateChart(history);
+          updatePieChart(history); // Build the new Pie chart
+        } catch (err) {
+          console.error(err);
+          document.getElementById("current-status").textContent = "Error";
+        }
+      }
+
+      function setupButtons() {
+        const studentId = getStudentId();
+
+        document.getElementById("logout-btn").addEventListener("click", () => {
+          localStorage.removeItem("userName");
+          window.location.href = "/";
+        });
+
+        document
+          .getElementById("download-btn")
+          .addEventListener("click", () => {
+            window.print();
+          });
+
+        document
+          .getElementById("download-txt-btn")
+          .addEventListener("click", () => {
+            window.open(`/download-report/${studentId}`, "_blank");
+          });
+
+        document.getElementById("export-png").addEventListener("click", () => {
+          const chartCanvas = document.getElementById("engagementChart");
+          const link = document.createElement("a");
+          link.href = chartCanvas.toDataURL("image/png");
+          link.download = `${studentId}_engagement_chart.png`;
+          link.click();
+        });
+
+        document
+          .getElementById("export-csv")
+          .addEventListener("click", async () => {
+            try {
+              const res = await fetch(`/data/engagement/${studentId}`);
+              const data = await res.json();
+              const history = data.engagement_history || [];
+
+              let csv = "timestamp,emotion,engagement,reason\n";
+              history.forEach((item) => {
+                const row = [
+                  item.timestamp || "",
+                  item.emotion || "",
+                  item.engagement ?? "",
+                  (item.reason || "").replace(/,/g, " "),
+                ];
+                csv += row.join(",") + "\n";
+              });
+
+              const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+              const url = URL.createObjectURL(blob);
+
+              const link = document.createElement("a");
+              link.href = url;
+              link.download = `${studentId}_engagement_data.csv`;
+              link.click();
+
+              URL.revokeObjectURL(url);
+            } catch (err) {
+              alert("Failed to export CSV");
+            }
+          });
+
+        document
+          .getElementById("load-xai-btn")
+          .addEventListener("click", async () => {
+            const xaiStatus = document.getElementById("xai-status");
+            const xaiImage = document.getElementById("xai-image");
+
+            try {
+              xaiStatus.textContent = "Generating XAI... Please wait.";
+              xaiImage.style.display = "none";
+
+              const res = await fetch(`/xai/${studentId}`);
+              const data = await res.json();
+
+              if (!res.ok) {
+                throw new Error(data.message || "Failed to generate XAI");
+              }
+
+              xaiImage.src = data.image_url;
+              xaiImage.style.display = "block";
+              xaiStatus.textContent = "XAI generated successfully.";
+            } catch (err) {
+              xaiStatus.textContent = err.message;
+            }
+          });
+      }
+
+      document.addEventListener("DOMContentLoaded", async () => {
+        document.getElementById("user-name").textContent =
+          localStorage.getItem("userName") || "Teacher";
+
+        setupButtons();
+        await loadReportData();
+
+        setInterval(loadReportData, 5000);
+      });
+    </script>
+  </body>
+</html>

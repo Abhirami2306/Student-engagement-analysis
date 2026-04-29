@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Teacher Dashboard - EduPulse Vortex</title>
+    <link rel="stylesheet" href="/css/style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    />
+  </head>
+  <body>
+    <div class="app-layout">
+      <aside class="sidebar">
+        <a href="#" class="logo"
+          ><i class="fa-solid fa-bolt"></i> EduPulse Vortex</a
+        >
+        <nav class="nav-menu">
+          <a href="#" class="active"
+            ><i class="fa-solid fa-table-columns"></i> Dashboard</a
+          >
+          <a href="#"><i class="fa-solid fa-chart-pie"></i> Analytics</a>
+        </nav>
+
+        <div
+          style="
+            margin-top: auto;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border-light);
+          "
+        >
+          <div
+            style="
+              display: flex;
+              align-items: center;
+              gap: 1rem;
+              margin-bottom: 1rem;
+            "
+          >
+            <img
+              src="https://i.pravatar.cc/40?u=teacher"
+              alt="Teacher"
+              style="width: 40px; height: 40px; border-radius: 50%"
+            />
+            <div>
+              <div id="user-name" style="font-weight: 600"></div>
+              <div style="font-size: 0.9rem; color: var(--text-medium)">
+                Teacher
+              </div>
+            </div>
+          </div>
+          <button id="logout-btn" class="btn btn-outline" style="width: 100%">
+            Logout
+          </button>
+        </div>
+      </aside>
+
+      <main class="main-content-wrapper">
+        <header class="header">
+          <div>
+            <h1>Class Dashboard</h1>
+            <p>Real-time student engagement monitoring</p>
+          </div>
+          <div style="color: var(--text-medium)">
+            <i class="fa-regular fa-clock"></i> Live Session • 45 min
+          </div>
+        </header>
+
+        <div class="stat-grid">
+          <div class="card stat-card">
+            <h4>Total Students</h4>
+            <div id="student-count" class="value">0</div>
+            <p style="color: var(--text-light)">Active in class</p>
+          </div>
+          <div class="card stat-card">
+            <h4>Average Engagement</h4>
+            <div id="class-average" class="value">0%</div>
+            <p class="trend text-green">+5% from last class</p>
+          </div>
+          <div class="card stat-card">
+            <h4>Attentive Students</h4>
+            <div id="attentive-count" class="value">0</div>
+            <p style="color: var(--text-light)">Currently focused</p>
+          </div>
+          <div class="card stat-card">
+            <h4>Need Attention</h4>
+            <div id="attention-count" class="value">0</div>
+            <p style="color: var(--text-light)">Require intervention</p>
+          </div>
+        </div>
+
+        <div class="card">
+          <h2 class="card-title" style="font-size: 1.25rem; font-weight: 600">
+            Student Overview
+          </h2>
+          <table class="student-table">
+            <thead>
+              <tr>
+                <th>Student</th>
+                <th>Status</th>
+                <th>Engagement</th>
+                <th>Emotional State</th>
+                <th>Last Active</th>
+                <th>Feedback</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="student-list-body"></tbody>
+          </table>
+        </div>
+      </main>
+    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        // --- User Info & Logout Logic ---
+        const userName = localStorage.getItem("userName") || "Teacher";
+        document.getElementById("user-name").textContent = userName;
+
+        document.getElementById("logout-btn").addEventListener("click", () => {
+          localStorage.removeItem("userName");
+          window.location.href = "/";
+        });
+
+        // --- Dashboard Update Logic ---
+        // --- Dashboard Update Logic ---
+        async function updateDashboard() {
+          try {
+            const studentsRes = await fetch("/data/students");
+            if (!studentsRes.ok) throw new Error("Failed to fetch students");
+            const { students } = await studentsRes.json();
+
+            if (!students) return;
+
+            const dataPromises = students.map((id) =>
+              fetch(`/data/engagement/${id}`)
+                .then((res) => (res.ok ? res.json() : null))
+                .then((data) => (data ? { ...data, id } : null)),
+            );
+            const allStudentData = (await Promise.all(dataPromises)).filter(
+              Boolean,
+            );
+
+            let totalScore = 0,
+              attentiveCount = 0,
+              attentionCount = 0;
+            document.getElementById("student-count").textContent =
+              allStudentData.length;
+
+            const tableBody = document.getElementById("student-list-body");
+            tableBody.innerHTML = "";
+
+            allStudentData.forEach((student) => {
+              if (
+                !student.engagement_history ||
+                !student.engagement_history.length
+              )
+                return;
+
+              const latest =
+                student.engagement_history[
+                  student.engagement_history.length - 1
+                ];
+
+              // FIX 1: Change 'latest.score' to 'latest.engagement'
+              const score = (latest.engagement || 0) * 100;
+              totalScore += score;
+
+              let statusText, statusColor;
+              if (score >= 70) {
+                statusText = "Attentive";
+                statusColor = "var(--green-accent)";
+                attentiveCount++;
+              } else if (score < 40) {
+                statusText = "Needs Attention";
+                statusColor = "var(--red-accent)";
+                attentionCount++;
+              } else {
+                statusText = "Neutral";
+                statusColor = "var(--yellow-accent)";
+              }
+
+              tableBody.innerHTML += `
+                            <tr>
+                                <td><span class="status-dot" style="background-color: ${statusColor}; margin-right: 8px;"></span>${student.id}</td>
+                                <td><span class="status-badge" style="background-color: ${statusColor};">${statusText}</span></td>
+                                <td>
+                                    <div style="display: flex; align-items: center; gap: 8px;">
+                                        <div class="progress-bar">
+                                            <div class="progress-bar-inner" style="width: ${score}%; background-color: ${statusColor};"></div>
+                                        </div>
+                                        <span>${score.toFixed(0)}%</span>
+                                    </div>
+                                </td>
+                                <td>${latest.emotion}</td> 
+                                <td>Just now</td>
+                                <td>${student.feedback ? student.feedback.length : 0} responses</td>
+                                <td><a href="/student-report?student_id=${student.id}" class="btn btn-outline">View Report</a></td>
+                            </tr>`;
+            });
+
+            // FIX 3: Prevent NaN on class average if no students
+            const avgScore =
+              allStudentData.length > 0
+                ? totalScore / allStudentData.length
+                : 0;
+            document.getElementById("class-average").textContent =
+              `${avgScore.toFixed(0)}%`;
+            document.getElementById("attentive-count").textContent =
+              attentiveCount;
+            document.getElementById("attention-count").textContent =
+              attentionCount;
+          } catch (error) {
+            console.error("Failed to update dashboard:", error);
+          }
+        }
+
+        updateDashboard();
+        setInterval(updateDashboard, 5000);
+      });
+    </script>
+  </body>
+</html>

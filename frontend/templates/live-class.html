@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Live Class - Physics</title>
+    <link rel="stylesheet" href="/css/style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    />
+  </head>
+  <body class="live-class-page">
+    <div class="live-class-container">
+      <header class="live-class-header" role="banner">
+        <div>
+          <h2>Physics</h2>
+          <p>Prof. Michael Chen</p>
+        </div>
+        <div class="live-indicator" aria-live="polite"><span></span> LIVE</div>
+      </header>
+
+      <main class="live-class-layout" role="main">
+        <section class="video-main" aria-label="Live class video feed">
+          <div class="video-area">
+            <div id="video-placeholder" aria-live="polite">
+              <i class="fa-solid fa-video-slash"></i>
+              <h3>Camera is off</h3>
+              <button id="enable-camera-btn" class="btn">
+                Enable Camera & Microphone
+              </button>
+            </div>
+            <video
+              id="video"
+              autoplay
+              muted
+              playsinline
+              style="display: none"
+              aria-hidden="true"
+            ></video>
+            <canvas
+              id="canvas"
+              style="display: none"
+              aria-hidden="true"
+            ></canvas>
+          </div>
+
+          <div
+            class="video-controls"
+            role="toolbar"
+            aria-label="Video controls"
+          >
+            <button
+              class="control-btn"
+              aria-label="Mute microphone"
+              id="mute-mic-btn"
+            >
+              <i class="fa-solid fa-microphone-slash"></i>
+            </button>
+            <a
+              href="/student-dashboard"
+              class="control-btn hangup"
+              aria-label="Hang up and leave class"
+            >
+              <i class="fa-solid fa-phone"></i>
+            </a>
+            <button
+              class="control-btn"
+              aria-label="Turn off video"
+              id="toggle-video-btn"
+            >
+              <i class="fa-solid fa-video-slash"></i>
+            </button>
+          </div>
+        </section>
+
+        <aside
+          class="right-sidebar"
+          aria-label="Class information and feedback"
+        >
+          <div class="sidebar-section">
+            <h3>Class Feedback</h3>
+            <p>
+              Share your feedback about this class to help improve the learning
+              experience.
+            </p>
+            <button
+              id="provide-feedback-btn"
+              class="btn btn-provide-feedback"
+              aria-haspopup="dialog"
+              aria-controls="feedback-modal"
+            >
+              Provide Feedback
+            </button>
+          </div>
+          <div class="sidebar-section info-section">
+            <h3>Class Information</h3>
+            <p><strong>Subject:</strong> Physics</p>
+            <p><strong>Teacher:</strong> Prof. Michael Chen</p>
+            <p><strong>Description:</strong> Quantum Mechanics</p>
+          </div>
+        </aside>
+      </main>
+    </div>
+
+    <div
+      id="feedback-modal"
+      class="modal-overlay"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="feedback-modal-title"
+      aria-hidden="true"
+      style="display: none"
+    >
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 id="feedback-modal-title">Class Feedback</h3>
+          <button
+            id="close-modal-btn"
+            class="btn-close"
+            aria-label="Close feedback modal"
+          >
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+        <p class="modal-subtitle">
+          Share your thoughts about <strong>Physics</strong> with Prof. Michael
+          Chen
+        </p>
+        <p class="modal-question">How would you rate this class?</p>
+
+        <div
+          id="feedback-options"
+          role="radiogroup"
+          aria-label="Class rating options"
+        >
+          <div
+            class="feedback-option"
+            data-value="Clear"
+            role="radio"
+            tabindex="0"
+            aria-checked="false"
+          >
+            <div class="feedback-icon">
+              <i class="fa-solid fa-lightbulb"></i>
+            </div>
+            <div class="feedback-text">
+              <h4>Clear</h4>
+              <p>The content was well explained and easy to understand</p>
+            </div>
+          </div>
+          <div
+            class="feedback-option"
+            data-value="Confusing"
+            role="radio"
+            tabindex="-1"
+            aria-checked="false"
+          >
+            <div class="feedback-icon">
+              <i class="fa-solid fa-question-circle"></i>
+            </div>
+            <div class="feedback-text">
+              <h4>Confusing</h4>
+              <p>Some parts were hard to follow or unclear</p>
+            </div>
+          </div>
+          <div
+            class="feedback-option"
+            data-value="Boring"
+            role="radio"
+            tabindex="-1"
+            aria-checked="false"
+          >
+            <div class="feedback-icon">
+              <i class="fa-regular fa-face-meh"></i>
+            </div>
+            <div class="feedback-text">
+              <h4>Boring</h4>
+              <p>The class lacked engagement or interest</p>
+            </div>
+          </div>
+        </div>
+
+        <label for="comments">Additional Comments (Optional)</label>
+        <textarea
+          id="comments"
+          placeholder="Share any specific feedback or suggestions..."
+        ></textarea>
+
+        <div class="modal-actions">
+          <button id="cancel-feedback-btn" class="btn btn-outline">
+            Cancel
+          </button>
+          <button id="submit-feedback-btn" class="btn btn-primary">
+            Submit Feedback
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="help-button"><i class="fa-solid fa-question"></i></div>
+
+    <script>
+      // Your existing JavaScript for camera, modal, and feedback submission will work with this new structure.
+      // Ensure your CSS correctly styles the new classes for the full visual effect.
+      document.addEventListener("DOMContentLoaded", () => {
+        const studentId = "student123";
+        const enableCameraBtn = document.getElementById("enable-camera-btn");
+        const videoPlaceholder = document.getElementById("video-placeholder");
+        const video = document.getElementById("video");
+        const provideFeedbackBtn = document.getElementById(
+          "provide-feedback-btn"
+        );
+        const feedbackModal = document.getElementById("feedback-modal");
+        const cancelFeedbackBtn = document.getElementById(
+          "cancel-feedback-btn"
+        );
+        const closeModalBtn = document.getElementById("close-modal-btn");
+        const submitFeedbackBtn = document.getElementById(
+          "submit-feedback-btn"
+        );
+        const feedbackOptions = document.querySelectorAll(".feedback-option");
+        let selectedFeedback = ""; // --- Camera Activation Logic ---
+
+        enableCameraBtn.onclick = () => {
+          navigator.mediaDevices
+            .getUserMedia({ video: true, audio: false })
+            .then((stream) => {
+              video.srcObject = stream;
+              video.style.display = "block";
+              video.setAttribute("aria-hidden", "false");
+              videoPlaceholder.style.display = "none"; // WebSocket Connection for real-time video frame sending
+
+              const ws = new WebSocket(
+                `ws://${window.location.host}/ws/video/${studentId}`
+              );
+              ws.onopen = () => {
+                console.log("WebSocket connected. Starting to send frames.");
+                setInterval(() => {
+                  const canvas = document.getElementById("canvas");
+                  canvas.width = video.videoWidth;
+                  canvas.height = video.videoHeight;
+                  const context = canvas.getContext("2d");
+                  context.drawImage(video, 0, 0, canvas.width, canvas.height);
+                  canvas.toBlob(
+                    (blob) => {
+                      if (blob) ws.send(blob);
+                    },
+                    "image/jpeg",
+                    0.7
+                  );
+                }, 500);
+              };
+              ws.onmessage = (event) => {
+                console.log("Received from server:", event.data);
+              };
+            })
+            .catch((err) => {
+              console.error("Camera Access Error:", err);
+              alert(
+                "Camera access was denied. Please enable camera permissions in your browser settings and refresh the page."
+              );
+            });
+        }; // --- Accessible Modal Control Logic ---
+
+        const showModal = () => {
+          feedbackModal.style.display = "flex";
+          feedbackModal.setAttribute("aria-hidden", "false");
+          feedbackOptions[0].focus();
+        };
+        const hideModal = () => {
+          feedbackModal.style.display = "none";
+          feedbackModal.setAttribute("aria-hidden", "true");
+          provideFeedbackBtn.focus();
+        };
+
+        provideFeedbackBtn.onclick = showModal;
+        cancelFeedbackBtn.onclick = hideModal;
+        closeModalBtn.onclick = hideModal; // --- Accessible Radio Group Logic with Keyboard Navigation ---
+
+        feedbackOptions.forEach((option, index) => {
+          const selectOption = () => {
+            feedbackOptions.forEach((opt) => {
+              opt.classList.remove("selected");
+              opt.setAttribute("aria-checked", "false");
+            });
+            option.classList.add("selected");
+            selectedFeedback = option.dataset.value;
+            option.setAttribute("aria-checked", "true");
+          };
+
+          option.addEventListener("click", selectOption);
+
+          option.addEventListener("keydown", (e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault();
+              selectOption();
+            }
+            if (e.key === "ArrowDown" || e.key === "ArrowRight") {
+              e.preventDefault();
+              const nextIndex = (index + 1) % feedbackOptions.length;
+              feedbackOptions[nextIndex].focus();
+            }
+            if (e.key === "ArrowUp" || e.key === "ArrowLeft") {
+              e.preventDefault();
+              const prevIndex =
+                (index - 1 + feedbackOptions.length) % feedbackOptions.length;
+              feedbackOptions[prevIndex].focus();
+            }
+          });
+        }); // --- Form Submission ---
+
+        submitFeedbackBtn.onclick = async () => {
+          if (!selectedFeedback) {
+            alert("Please select a rating.");
+            return;
+          }
+          const comments = document.getElementById("comments").value;
+          const fullFeedback = `${selectedFeedback}: ${comments}`.trim();
+
+          try {
+            await fetch(`/feedback/${studentId}`, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ feedback_text: fullFeedback }),
+            });
+            alert("Thank you! Your feedback has been submitted.");
+            hideModal();
+          } catch (error) {
+            console.error("Feedback submission error:", error);
+            alert("Sorry, there was an error submitting your feedback.");
+          }
+        };
+      });
+    </script>
+  </body>
+</html>

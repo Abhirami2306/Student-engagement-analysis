@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Student Portal</title>
+    <link rel="stylesheet" href="/css/style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    />
+  </head>
+  <body>
+    <header class="dashboard-header">
+      <div style="display: flex; align-items: center; gap: 0.75rem">
+        <i
+          class="fa-solid fa-graduation-cap"
+          style="font-size: 1.5rem; color: var(--primary-purple)"
+        ></i>
+        <span style="font-weight: 600; font-size: 1.2rem">Student Portal</span>
+      </div>
+      <div
+        style="text-align: right; display: flex; align-items: center; gap: 1rem"
+      >
+        <div>
+          <div id="user-name" style="font-weight: 600"></div>
+          <div
+            id="user-course"
+            style="font-size: 0.9rem; color: var(--text-medium)"
+          ></div>
+        </div>
+        <img
+          src="https://via.placeholder.com/40"
+          alt="Profile Picture"
+          style="width: 40px; height: 40px; border-radius: 50%"
+        />
+        <button id="logout-btn" class="btn btn-outline">Logout</button>
+      </div>
+    </header>
+
+    <div class="container">
+      <div class="welcome-banner">
+        <h1 id="welcome-message" style="font-size: 2rem; font-weight: 700"></h1>
+        <p style="font-size: 1.1rem">
+          Ready to continue your learning journey?
+        </p>
+      </div>
+
+      <div class="tabs-container">
+        <div class="tabs">
+          <button class="tab-button active" onclick="showTab('my-classes')">
+            My Classes
+          </button>
+          <button class="tab-button" onclick="showTab('profile')">
+            Profile
+          </button>
+        </div>
+      </div>
+
+      <div id="my-classes-content" class="tab-content active">
+        <div class="class-grid">
+          <div class="class-card">
+            <div class="card-header">
+              <h3>Advanced Mathematics</h3>
+              <p>Calculus and Linear Algebra</p>
+            </div>
+            <div class="card-body">
+              <div class="details">
+                <i class="fa-solid fa-user-tie"></i> Dr. Sarah Williams
+              </div>
+              <div class="details">
+                <i class="fa-regular fa-clock"></i> Monday, Wednesday 10:00 AM
+              </div>
+            </div>
+            <div class="card-footer">
+              <a href="/live-class" class="btn btn-join"
+                ><i class="fa-solid fa-video"></i> Join Class</a
+              >
+            </div>
+          </div>
+          <div class="class-card">
+            <div class="card-header">
+              <h3>Physics</h3>
+              <p>Quantum Mechanics</p>
+            </div>
+            <div class="card-body">
+              <div class="details">
+                <i class="fa-solid fa-user-tie"></i> Prof. Michael Chen
+              </div>
+              <div class="details">
+                <i class="fa-regular fa-clock"></i> Tuesday, Thursday 2:00 PM
+              </div>
+            </div>
+            <div class="card-footer">
+              <a href="/live-class" class="btn btn-join"
+                ><i class="fa-solid fa-video"></i> Join Class</a
+              >
+            </div>
+          </div>
+          <div class="class-card">
+            <div class="card-header">
+              <h3>Computer Science</h3>
+              <p>Data Structures & Algorithms</p>
+            </div>
+            <div class="card-body">
+              <div class="details">
+                <i class="fa-solid fa-user-tie"></i> Dr. Emily Brown
+              </div>
+              <div class="details">
+                <i class="fa-regular fa-clock"></i> Monday, Friday 1:00 PM
+              </div>
+            </div>
+            <div class="card-footer">
+              <a href="/live-class" class="btn btn-join"
+                ><i class="fa-solid fa-video"></i> Join Class</a
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="profile-content" class="tab-content">
+        <div class="profile-card-large">
+          <div class="profile-header">
+            <h2>Profile Information</h2>
+            <p>Manage your personal information and settings</p>
+          </div>
+          <div class="profile-body">
+            <div class="profile-picture-section">
+              <img
+                src="https://i.pravatar.cc/100?u=alex.johnson"
+                alt="Alex Johnson's profile picture"
+                class="profile-img-large"
+              />
+              <button class="btn btn-change-pic">
+                <i class="fa-solid fa-camera"></i> Change Picture
+              </button>
+              <small>JPG, PNG or GIF. Max 2MB.</small>
+            </div>
+            <div class="profile-details-section">
+              <div class="info-grid">
+                <div class="info-item">
+                  <label>Full Name</label>
+                  <div class="info-value" id="profile-name">Alex Johnson</div>
+                </div>
+                <div class="info-item">
+                  <label>Email Address</label>
+                  <div class="info-value">alex.johnson@student.edu</div>
+                </div>
+                <div class="info-item">
+                  <label>Course</label>
+                  <div class="info-value">Computer Science</div>
+                </div>
+                <div class="info-item">
+                  <label>Grade/Year</label>
+                  <div class="info-value">Year 3</div>
+                </div>
+              </div>
+              <div class="profile-actions">
+                <button class="btn btn-primary">Edit Profile</button>
+                <button class="btn btn-secondary">Change Password</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="help-button"><i class="fa-solid fa-question"></i></div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const userName = localStorage.getItem("userName") || "Alex Johnson";
+        const userCourse = "Computer Science";
+        const userEmail = "alex.johnson@student.edu"; // Assuming this is the user's email
+
+        // Populate user info
+        // Note: The static email in your HTML is now replaced by this JS logic
+        document.getElementById("user-name").textContent = userName;
+        document.getElementById(
+          "welcome-message"
+        ).textContent = `Welcome back, ${userName}!`;
+        document.getElementById("user-course").textContent = userCourse;
+        document.getElementById("profile-name").textContent = userName;
+
+        // This line was attempting to set text content on a div that should hold the email,
+        // let's assume the div with id 'user-email' is what you intended to update.
+        // If your header has a div with id `user-email`, this will update it.
+        const userEmailDiv = document.getElementById("user-email");
+        if (userEmailDiv) {
+          userEmailDiv.textContent = userEmail;
+        }
+
+        // --- LOGOUT BUTTON LOGIC ADDED HERE ---
+        document.getElementById("logout-btn").addEventListener("click", () => {
+          localStorage.removeItem("userName");
+          window.location.href = "/";
+        });
+      });
+
+      // Tab switching functionality
+      function showTab(tabId) {
+        document
+          .querySelectorAll(".tab-content")
+          .forEach((tab) => tab.classList.remove("active"));
+        document
+          .querySelectorAll(".tab-button")
+          .forEach((btn) => btn.classList.remove("active"));
+        document.getElementById(tabId + "-content").classList.add("active");
+        document
+          .querySelector(`[onclick="showTab('${tabId}')"]`)
+          .classList.add("active");
+      }
+    </script>
+  </body>
+</html>
