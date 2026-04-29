@@ -1,0 +1,145 @@
+Detected Attentiveness Drops:
+
+• Time: 12:17:33
+  Attentiveness Score: 0.06
+  Reason: Low Focus / Wandering
+
+• Time: 12:17:35
+  Attentiveness Score: 0.10
+  Reason: Low Focus / Wandering
+
+• Time: 12:17:35
+  Attentiveness Score: 0.08
+  Reason: no face detected
+
+• Time: 12:17:35
+  Attentiveness Score: 0.07
+  Reason: no face detected
+
+• Time: 12:17:37
+  Attentiveness Score: 0.13
+  Reason: Low Focus / Wandering
+
+• Time: 12:17:39
+  Attentiveness Score: 0.14
+  Reason: Low Focus / Wandering
+
+• Time: 12:17:41
+  Attentiveness Score: 0.14
+  Reason: Low Focus / Wandering
+
+• Time: 12:17:43
+  Attentiveness Score: 0.15
+  Reason: Low Focus / Wandering
+
+• Time: 12:17:45
+  Attentiveness Score: 0.18
+  Reason: Low Focus / Wandering
+
+• Time: 12:17:47
+  Attentiveness Score: 0.17
+  Reason: Low Focus / Wandering
+
+• Time: 12:17:49
+  Attentiveness Score: 0.19
+  Reason: Low Focus / Wandering
+
+• Time: 12:17:54
+  Attentiveness Score: 0.38
+  Reason: Low Focus / Wandering
+
+• Time: 12:17:56
+  Attentiveness Score: 0.28
+  Reason: Low Focus / Wandering
+
+• Time: 12:17:58
+  Attentiveness Score: 0.22
+  Reason: Low Focus / Wandering
+
+• Time: 12:18:00
+  Attentiveness Score: 0.20
+  Reason: Low Focus / Wandering
+
+• Time: 12:18:02
+  Attentiveness Score: 0.18
+  Reason: Low Focus / Wandering
+
+• Time: 12:18:04
+  Attentiveness Score: 0.15
+  Reason: Low Focus / Wandering
+
+• Time: 12:18:06
+  Attentiveness Score: 0.14
+  Reason: Low Focus / Wandering
+
+• Time: 12:18:08
+  Attentiveness Score: 0.17
+  Reason: Low Focus / Wandering
+
+• Time: 12:18:10
+  Attentiveness Score: 0.17
+  Reason: Low Focus / Wandering
+
+• Time: 12:18:13
+  Attentiveness Score: 0.15
+  Reason: Low Focus / Wandering
+
+• Time: 12:18:15
+  Attentiveness Score: 0.16
+  Reason: Low Focus / Wandering
+
+• Time: 12:18:16
+  Attentiveness Score: 0.15
+  Reason: Low Focus / Wandering
+
+• Time: 13:49:19
+  Attentiveness Score: 0.16
+  Reason: Low Focus / Wandering
+
+• Time: 13:49:21
+  Attentiveness Score: 0.16
+  Reason: Low Focus / Wandering
+
+• Time: 13:49:23
+  Attentiveness Score: 0.14
+  Reason: Low Focus / Wandering
+
+• Time: 13:49:25
+  Attentiveness Score: 0.15
+  Reason: Low Focus / Wandering
+
+• Time: 13:49:27
+  Attentiveness Score: 0.15
+  Reason: Low Focus / Wandering
+
+• Time: 13:49:29
+  Attentiveness Score: 0.15
+  Reason: Low Focus / Wandering
+
+• Time: 13:49:32
+  Attentiveness Score: 0.49
+  Reason: Engaged & Focused (Smiling)
+
+• Time: 13:49:48
+  Attentiveness Score: 0.36
+  Reason: Low Focus / Wandering
+
+• Time: 13:49:50
+  Attentiveness Score: 0.28
+  Reason: Low Focus / Wandering
+
+• Time: 13:49:52
+  Attentiveness Score: 0.23
+  Reason: Low Focus / Wandering
+
+• Time: 13:49:54
+  Attentiveness Score: 0.21
+  Reason: Low Focus / Wandering
+
+• Time: 13:49:56
+  Attentiveness Score: 0.22
+  Reason: Low Focus / Wandering
+
+Overall Session Summary:
+Average Attentiveness Score: 0.28
+Final Assessment: Highly Distracted
